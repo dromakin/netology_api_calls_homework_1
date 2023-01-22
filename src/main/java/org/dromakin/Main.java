@@ -1,10 +1,6 @@
 package org.dromakin;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.http.HttpEntity;
@@ -18,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -54,7 +49,6 @@ public class Main {
 
             HttpEntity entity = response.getEntity();
             if (entity != null) {
-                // return it as a String
                 jsonString = EntityUtils.toString(entity);
                 logger.debug(jsonString);
 
@@ -62,45 +56,11 @@ public class Main {
                 throw new RequestException("json response is null!");
             }
 
-//            ArrayList<CatFact> catsFastsList = new ArrayList<>();
-
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-//            final JsonNode arrNode = new ObjectMapper().readTree(jsonString);
-//            if (arrNode.isArray()) {
-//                for (final JsonNode objNode : arrNode) {
-//                    logger.debug(objNode);
-//
-//                    CatFact obj = objectMapper.treeToValue(objNode, CatFact.class);
-//
-////                    JsonParser parser = objectMapper.treeAsTokens(objNode);
-////                    CatFact obj = objectMapper.readValue(parser, CatFact.class);
-//
-//                    catsFastsList.add(obj);
-//                }
-//            }
-
-
-//            System.out.println(catsFastsList);
-
-//            catsFastsList.stream()
-//                    .filter(value -> value.getUpvotes() != null && value.getUpvotes() > 0)
-//                    .forEach(logger::info);
-
-//
-//            CatFact[] pp1 = objectMapper.readValue(jsonString, CatFact[].class);
-//
-//            System.out.println("JSON array to Array objects...");
-//            for (CatFact person : pp1) {
-//                System.out.println(person);
-//            }
-
-//            ObjectMapper objectMapper = new ObjectMapper();
             TypeFactory typeFactory = objectMapper.getTypeFactory();
             List<CatFact> catsFastsList = objectMapper.readValue(jsonString, typeFactory.constructCollectionType(List.class, CatFact.class));
-
-//            List<CatFact> catsFastsList = objectMapper.readValue(jsonString, new TypeReference<List<CatFact>>() {});
 
             catsFastsList.stream().filter(value -> value.getUpvotes() != null && value.getUpvotes() > 0).forEach(logger::info);
 
