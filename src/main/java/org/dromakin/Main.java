@@ -23,17 +23,17 @@ public class Main {
     private static final String URI = "https://raw.githubusercontent.com/netology-code/jd-homeworks/master/http/task1/cats";
 
     public static void main(String[] args) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create()
+
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create()
                 .setDefaultRequestConfig(RequestConfig.custom()
                         .setConnectTimeout(5000)
                         .setSocketTimeout(30000)
                         .setRedirectsEnabled(false)
                         .build())
-                .build();
+                .build()) {
 
-        HttpGet request = new HttpGet(URI);
+            HttpGet request = new HttpGet(URI);
 
-        try {
             logger.info("Make request to url {}", URI);
             CloseableHttpResponse response = httpClient.execute(request);
 
